@@ -33,7 +33,7 @@ Follow these steps to set up the project on your local machine.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/SAHIL-creator-Dev/your-repo-name.git
+git clone https://github.com/SAHIL-creator-Dev/django-portfolio.git
 cd portfolio
 ```
 
