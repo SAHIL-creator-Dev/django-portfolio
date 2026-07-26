@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Sahil Thapa — AI Software Developer{% endblock %}</title>
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Portfolio of Sahil Thapa, an AI Software Developer specializing in Machine Learning, Computer Vision, Python, and scalable Django backend systems." />
+  <meta name="keywords" content="Python, Django, AI, Machine Learning, Computer Vision, Software Developer, Sahil Thapa, B.Tech CSE" />
+  <meta name="author" content="Sahil Thapa" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sahil Thapa — AI Software Developer" />
+  <meta property="og:description" content="Portfolio of Sahil Thapa, an AI Software Developer specializing in Machine Learning, Computer Vision, Python, and scalable Django backend systems." />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:site_name" content="Sahil Thapa Portfolio" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="Sahil Thapa — AI Software Developer" />
+  <meta property="twitter:description" content="Portfolio of Sahil Thapa, an AI Software Developer specializing in Machine Learning, Computer Vision, Python, and scalable Django backend systems." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'core/favicon.ico' %}">
+
+  <!-- AOS (Animate on Scroll) -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <!-- Devicons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" />
+  <!-- Google Fonts Preload -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" as="style" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@300;400;500;700&amp;family=Space+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}" />
+
+  <!-- Schema.org Person Metadata -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sahil Thapa",
+    "jobTitle": "AI Software Developer",
+    "url": "{{ request.build_absolute_uri }}",
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Uttarakhand Technical University"
+    },
+    "knowsAbout": ["Python", "Django", "Machine Learning", "Computer Vision", "Software Engineering"]
+  }
+  </script>
+</head>
+<body>
+
+
+
+  {% include 'core/components/navbar.html' %}
+
+  <!-- Main Content -->
+  <main id="main-content">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  {% include 'core/components/footer.html' %}
+
+  <!-- Back to top -->
+  <button class="back-top" id="backTop" onclick="scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Custom Scripts -->
+  <script src="{% static 'core/js/main.js' %}"></script>
+</body>
+</html>

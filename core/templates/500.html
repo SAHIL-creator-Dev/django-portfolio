@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}500 - Server Error | Sahil Thapa{% endblock %}
+
+{% block content %}
+<section class="section" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+  <div class="container">
+    <h1 style="font-size: 4rem; color: var(--red, #ff5555); margin-bottom: 20px;">500</h1>
+    <h2>Internal Server Error</h2>
+    <p style="margin: 20px 0; color: var(--text-muted);">Something went wrong on our end. Please try again later.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
+  </div>
+</section>
+{% endblock %}
