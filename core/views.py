@@ -8,7 +8,7 @@ import re
 import logging
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import send_mail
 logger = logging.getLogger(__name__)
 
 
@@ -211,10 +211,12 @@ def home(request):
 
 def contact(request):
     if request.method == 'POST':
-        name = request.POST.get('name', '').strip()
-        email = request.POST.get('email', '').strip()
+        name    = request.POST.get('name', '').strip()
+        email   = request.POST.get('email', '').strip()
         subject = request.POST.get('subject', '').strip()
         message = request.POST.get('message', '').strip()
+
+        # ── Validation ────────────────────────────────────────────
         error_msg = None
         if not name or not email or not subject or not message:
             error_msg = 'All fields are required.'
@@ -225,46 +227,41 @@ def contact(request):
         elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             error_msg = 'Invalid email address format.'
 
-        if not error_msg:
-            try:
-                email_message = EmailMessage(
-                    subject=f"Portfolio Contact: {subject}",
-                    body=(
-                        f"New portfolio inquiry\n\n"
-                        f"Name: {name}\n"
-                        f"Email: {email}\n\n"
-                        f"Message:\n"
-                        f"{message}"
-                    ),
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=[settings.CONTACT_EMAIL],
-                    reply_to=[email],
-                )
-                # ↓ open connection manually with a timeout so Gunicorn never hangs
-                from django.core.mail import get_connection
-                connection = get_connection(timeout=10)  # 10s max
-                email_message.connection = connection
-                email_message.send(fail_silently=False)
-
-            except Exception as e:
-                logger.exception("Failed to send contact email.")
-                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {"status": "error",
-                         "message": "Sorry, something went wrong while sending your message."},
-                        status=500,
-                    )
-                messages.error(request, "Sorry, something went wrong while sending your message.")
-                return redirect("home")
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'status': 'ok', 'message': 'Message sent successfully!'})
-            messages.success(request, 'Your message has been sent!')
-        else:
+        if error_msg:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': error_msg}, status=400)
             messages.error(request, error_msg)
+            return redirect('home')
 
+        # ── Send email ────────────────────────────────────────────
+        try:
+            send_mail(
+                subject=f"Portfolio Contact: {subject}",
+                message=(
+                    f"New portfolio inquiry\n\n"
+                    f"Name:    {name}\n"
+                    f"Email:   {email}\n\n"
+                    f"Message:\n{message}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.CONTACT_EMAIL],
+                fail_silently=False,
+            )
+
+        except Exception:
+            logger.exception("Failed to send contact email.")
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse(
+                    {'status': 'error', 'message': 'Sorry, something went wrong while sending your message.'},
+                    status=500,
+                )
+            messages.error(request, 'Sorry, something went wrong while sending your message.')
+            return redirect('home')
+
+        # ── Success ───────────────────────────────────────────────
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'ok', 'message': 'Message sent successfully!'})
+        messages.success(request, 'Your message has been sent!')
         return redirect('home')
 
     return redirect('home')
