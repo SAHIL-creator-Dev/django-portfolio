@@ -244,6 +244,7 @@ def contact(request):
                 email_message.send(fail_silently=False)
 
             except Exception as e:
+                print("EMAIL ERROR:", e)
                 logger.exception("Failed to send contact email.")
 
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
