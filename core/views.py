@@ -236,16 +236,17 @@ def contact(request):
         # ── Send email ────────────────────────────────────────────
         try:
             send_mail(
-                subject=f"Portfolio Contact: {subject}",
-                message=(
-                    f"New portfolio inquiry\n\n"
-                    f"Name:    {name}\n"
-                    f"Email:   {email}\n\n"
-                    f"Message:\n{message}"
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.CONTACT_EMAIL],
-                fail_silently=False,
+            subject=f"[Portfolio] {subject}",
+            message=(
+                f"New portfolio contact\n\n"
+                f"Name: {name}\n"
+                f"Email: {email}\n\n"
+                f"Message:\n"
+                f"{message}"
+            ),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.CONTACT_EMAIL],
+            fail_silently=False,
             )
 
         except Exception:
