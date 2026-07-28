@@ -864,6 +864,20 @@ footer {
 
 /* ─── Mobile nav ─────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  /* GENERAL */
+  body { overflow-x: hidden; }
+  .section { padding: 50px 0; }
+  .section-title { font-size: 2rem; }
+  
+  /* Touch targets */
+  .btn, .cat-btn, .social-link { 
+    min-height: 44px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+  }
+
+  /* NAVBAR */
   .hamburger { display: flex; }
   .nav-links {
     position: fixed;
@@ -879,9 +893,70 @@ footer {
     backdrop-filter: blur(16px);
   }
   .nav-links.open { right: 0; }
-  .nav-links a { font-size: .9rem; }
+  .nav-links a { 
+    font-size: 1.2rem; 
+    min-height: 44px; 
+    display: flex; 
+    align-items: center; 
+    width: 100%; 
+  }
+
+  /* HERO SECTION */
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-meta { align-items: center; }
+  .hero-name { font-size: 2.5rem; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    width: 100%;
+  }
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-cta .btn {
+    width: 100%;
+  }
+
+  /* ABOUT SECTION */
   #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .terminal { font-size: 0.65rem; }
+  .terminal-body { overflow-x: auto; }
+  .about-highlights { grid-template-columns: 1fr; }
+
+  /* SKILLS SECTION */
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .skills-categories { flex-wrap: wrap; gap: 8px; }
+  .cat-btn { font-size: 0.65rem; padding: 8px 12px; }
+
+  /* PROJECTS SECTION */
+  #projects .featured-grid { grid-template-columns: 1fr; }
+  .other-projects-table th:not(:first-child):not(:last-child),
+  .other-projects-table td:not(:first-child):not(:last-child) {
+    display: none;
+  }
+  .other-projects-table th, .other-projects-table td {
+    font-size: 0.65rem;
+    padding: 10px 8px;
+  }
+
+  /* EXPERIENCE SECTION */
+  #experience .timeline { padding-left: 20px; }
+  .timeline-role { font-size: 1rem; }
+  .timeline-company { font-size: 0.7rem; }
+  .timeline-desc { font-size: 0.75rem; }
+
+  /* CONTACT SECTION */
   #contact .contact-grid { grid-template-columns: 1fr; gap: 40px; }
   .form-row { grid-template-columns: 1fr; }
-  .hero-stats { gap: 24px; }
+  .contact-social { width: 100%; }
+  .social-link { width: 100%; }
 }
