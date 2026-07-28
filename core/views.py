@@ -238,30 +238,25 @@ def contact(request):
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[settings.CONTACT_EMAIL],
-                    reply_to=[email],   # ← Visitor's email
+                    reply_to=[email],
                 )
-
+                # ↓ open connection manually with a timeout so Gunicorn never hangs
+                from django.core.mail import get_connection
+                connection = get_connection(timeout=10)  # 10s max
+                email_message.connection = connection
                 email_message.send(fail_silently=False)
 
             except Exception as e:
-                
                 logger.exception("Failed to send contact email.")
-
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return JsonResponse(
-                        {
-                            "status": "error",
-                            "message": "Sorry, something went wrong while sending your message.",
-                        },
+                        {"status": "error",
+                         "message": "Sorry, something went wrong while sending your message."},
                         status=500,
                     )
-
-                messages.error(
-                    request,
-                    "Sorry, something went wrong while sending your message.",
-                )
+                messages.error(request, "Sorry, something went wrong while sending your message.")
                 return redirect("home")
-            
+
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'ok', 'message': 'Message sent successfully!'})
             messages.success(request, 'Your message has been sent!')
