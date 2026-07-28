@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: django-portfolio
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn portfolio.wsgi:application"
