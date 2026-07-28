@@ -4,7 +4,11 @@ from django.http import JsonResponse
 import re
 import logging
 from .models import Skill, Project, Experience, ContactMessage
+import re
+import logging
 
+from django.conf import settings
+from django.core.mail import send_mail
 logger = logging.getLogger(__name__)
 
 
@@ -211,7 +215,7 @@ def contact(request):
         email = request.POST.get('email', '').strip()
         subject = request.POST.get('subject', '').strip()
         message = request.POST.get('message', '').strip()
-
+        error_msg = None
         if not name or not email or not subject or not message:
             error_msg = 'All fields are required.'
         elif len(name) > 100 or len(subject) > 200:
@@ -223,13 +227,39 @@ def contact(request):
 
         if not error_msg:
             try:
-                ContactMessage.objects.create(
-                    name=name, email=email, subject=subject, message=message
+                send_mail(
+                    subject=f"Portfolio Contact: {subject}",
+                    message=f"""
+            New message from your portfolio
+
+            Name: {name}
+            Email: {email}
+
+            Message:
+            {message}
+            """,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.CONTACT_EMAIL],
+                    fail_silently=False,
                 )
+
             except Exception as e:
-                logger.error(f"Failed to save contact message: {e}")
-                # Don't leak DB error to user, just log it.
-                pass 
+                logger.exception("Failed to send contact email.")
+
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse(
+                        {
+                            "status": "error",
+                            "message": "Sorry, something went wrong while sending your message.",
+                        },
+                        status=500,
+                    )
+
+                messages.error(
+                    request,
+                    "Sorry, something went wrong while sending your message.",
+                )
+                return redirect("home")
             
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'ok', 'message': 'Message sent successfully!'})
