@@ -8,7 +8,7 @@ import re
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 logger = logging.getLogger(__name__)
 
 
@@ -227,21 +227,21 @@ def contact(request):
 
         if not error_msg:
             try:
-                send_mail(
+                email_message = EmailMessage(
                     subject=f"Portfolio Contact: {subject}",
-                    message=f"""
-            New message from your portfolio
-
-            Name: {name}
-            Email: {email}
-
-            Message:
-            {message}
-            """,
+                    body=(
+                        f"New portfolio inquiry\n\n"
+                        f"Name: {name}\n"
+                        f"Email: {email}\n\n"
+                        f"Message:\n"
+                        f"{message}"
+                    ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.CONTACT_EMAIL],
-                    fail_silently=False,
+                    to=[settings.CONTACT_EMAIL],
+                    reply_to=[email],   # ← Visitor's email
                 )
+
+                email_message.send(fail_silently=False)
 
             except Exception as e:
                 logger.exception("Failed to send contact email.")
