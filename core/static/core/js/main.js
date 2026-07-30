@@ -42,10 +42,48 @@ window.addEventListener('scroll', () => {
 });
 
 // ── Mobile nav ────────────────────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const navLinks  = document.getElementById('navLinks');
-hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
-navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+const hamburger   = document.getElementById('hamburger');
+const navLinks    = document.getElementById('navLinks');
+const navBackdrop = document.getElementById('navBackdrop');
+
+function openNav() {
+  navLinks.classList.add('open');
+  navBackdrop.classList.add('open');
+  document.body.style.overflow = 'hidden'; // prevent scroll behind drawer
+  if (hamburger) hamburger.classList.add('open');
+}
+
+function closeNav() {
+  navLinks.classList.remove('open');
+  navBackdrop.classList.remove('open');
+  document.body.style.overflow = '';
+  if (hamburger) hamburger.classList.remove('open');
+}
+
+function toggleNav() {
+  if (navLinks.classList.contains('open')) {
+    closeNav();
+  } else {
+    openNav();
+  }
+}
+
+if (hamburger) hamburger.addEventListener('click', toggleNav);
+if (navBackdrop) navBackdrop.addEventListener('click', closeNav);
+
+// Close drawer when any nav link is clicked
+if (navLinks) {
+  navLinks.querySelectorAll('a').forEach(a => 
+    a.addEventListener('click', closeNav)
+  );
+}
+
+// Close on ESC key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navLinks && navLinks.classList.contains('open')) {
+    closeNav();
+  }
+});
 
 // ── Typed text ────────────────────────────────────────────────────
 const phrases = [
